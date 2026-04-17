@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 160" width="280" height="160" role="img" aria-label="Loam">
+  <title>Loam</title>
+  <g>
+    <path d="M 46 48 Q 54 18 96 12 Q 160 8 188 18 Q 162 42 120 42 Q 78 40 46 48 Z"
+          fill="#5a7c3a" stroke="#3d2817" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M 46 48 Q 100 22 188 18"
+          stroke="#3d2817" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <rect x="40" y="48" width="12" height="92" fill="#3d2817" rx="1"/>
+    <rect x="32" y="138" width="20" height="6" fill="#3d2817" rx="1"/>
+  </g>
+  <text x="62" y="142"
+        font-family="Fraunces, Georgia, 'Iowan Old Style', 'Palatino Linotype', serif"
+        font-size="96" font-weight="400" fill="#3d2817" letter-spacing="-4">oam</text>
+</svg>
