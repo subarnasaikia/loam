@@ -1,2 +1,4 @@
+# Suppresses pnpm's interactive "approve builds" prompt for esbuild's native build step.
+# Single-package repo — this file exists only for the esbuild exception below.
 onlyBuiltDependencies:
   - esbuild

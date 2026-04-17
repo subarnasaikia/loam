@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" role="img" aria-label="Loam mark">
+  <title>Loam mark</title>
+  <g transform="translate(34, 8)">
+    <path d="M 12 40 Q 20 10 62 4 Q 126 0 154 10 Q 128 34 86 34 Q 44 32 12 40 Z"
+          fill="#5a7c3a" stroke="#3d2817" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M 12 40 Q 66 14 154 10"
+          stroke="#3d2817" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <rect x="6" y="40" width="12" height="92" fill="#3d2817" rx="1"/>
+    <rect x="-2" y="130" width="20" height="6" fill="#3d2817" rx="1"/>
+  </g>
+</svg>
