@@ -1,5 +1,6 @@
 mod error;
 mod paths;
+mod entries;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
