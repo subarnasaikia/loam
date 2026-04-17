@@ -1,0 +1,44 @@
+# Brainstorming companion workspace
+.superpowers/
+
+# Claude Code local settings
+.claude/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+target/
+src-tauri/target/
+src-tauri/gen/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# User data (never commit a real journal)
+entries/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
