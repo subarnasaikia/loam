@@ -1,8 +1,10 @@
 # Brainstorming companion workspace
 .superpowers/
 
-# Claude Code local settings
-.claude/
+# Claude Code — local per-user settings only; project commands/agents are shared
+.claude/*
+!.claude/commands/
+!.claude/agents/
 
 # Dependencies
 node_modules/
