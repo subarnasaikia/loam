@@ -1,3 +1,4 @@
+mod db;
 mod entries;
 mod error;
 mod paths;
