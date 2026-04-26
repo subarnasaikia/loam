@@ -25,6 +25,8 @@ CREATE VIRTUAL TABLE IF NOT EXISTS entries_fts USING fts5(date UNINDEXED, body);
 CREATE INDEX IF NOT EXISTS idx_biome ON entries(biome);
 CREATE INDEX IF NOT EXISTS idx_themes ON entries(primary_theme);
 
+-- World features the user has encountered (biome unlocks, landmark discovery).
+-- No badges, no streaks — purely tracks what the world has revealed.
 CREATE TABLE IF NOT EXISTS unlocks (
   id TEXT PRIMARY KEY,
   unlocked_at INTEGER,
@@ -142,6 +144,6 @@ mod tests {
         let (_tmp, root) = setup();
         let conn = open(&root).unwrap();
         let result = schema_version(&conn);
-        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), LoamError::Sqlite(_)));
     }
 }

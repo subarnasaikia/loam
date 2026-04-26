@@ -27,6 +27,8 @@ pub fn write_entry(root: &Path, date: &str, body: &str) -> LoamResult<PathBuf> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)?;
     }
+    // Concurrent writes for the same date race on the shared .tmp file. Safe in
+    // M1 (single-writer UI); serialize at the command level when the editor arrives.
     let tmp = path.with_extension("md.tmp");
     fs::write(&tmp, body)?;
     fs::rename(&tmp, &path)?;

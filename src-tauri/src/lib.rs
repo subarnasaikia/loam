@@ -24,7 +24,7 @@ fn resolve_root_from_settings(user_override: Option<&str>) -> LoamResult<PathBuf
 
 #[tauri::command]
 fn ensure_loam_dir(state: State<AppState>) -> LoamResult<String> {
-    let root = state.root.lock().unwrap().clone();
+    let root = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?.clone();
     paths::ensure_dirs(&root)?;
     let conn = db::open(&root)?;
     db::migrate(&conn)?;
@@ -33,26 +33,26 @@ fn ensure_loam_dir(state: State<AppState>) -> LoamResult<String> {
 
 #[tauri::command]
 fn write_entry(date: String, body: String, state: State<AppState>) -> LoamResult<String> {
-    let root = state.root.lock().unwrap().clone();
+    let root = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?.clone();
     let path = entries::write_entry(&root, &date, &body)?;
     Ok(path.to_string_lossy().to_string())
 }
 
 #[tauri::command]
 fn read_entry(date: String, state: State<AppState>) -> LoamResult<Option<String>> {
-    let root = state.root.lock().unwrap().clone();
+    let root = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?.clone();
     entries::read_entry(&root, &date)
 }
 
 #[tauri::command]
 fn list_entries(state: State<AppState>) -> LoamResult<Vec<String>> {
-    let root = state.root.lock().unwrap().clone();
+    let root = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?.clone();
     entries::list_entries(&root)
 }
 
 #[tauri::command]
 fn load_settings(state: State<AppState>) -> LoamResult<Settings> {
-    let root = state.root.lock().unwrap().clone();
+    let root = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?.clone();
     settings::load_settings(&root)
 }
 
@@ -61,7 +61,7 @@ fn save_settings(
     new_settings: Settings,
     state: State<AppState>,
 ) -> LoamResult<()> {
-    let mut root_guard = state.root.lock().unwrap();
+    let mut root_guard = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?;
     settings::save_settings(&root_guard, &new_settings)?;
     if let Some(new_path) = new_settings.loam_path.as_deref() {
         *root_guard = PathBuf::from(new_path);
@@ -73,8 +73,14 @@ fn save_settings(
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let initial_root = resolve_root_from_settings(None)
+    let default_root = resolve_root_from_settings(None)
         .expect("could not resolve initial Loam directory");
+    // Honor a previously saved loam_path so custom locations survive restarts.
+    let initial_root = settings::load_settings(&default_root)
+        .ok()
+        .and_then(|s| s.loam_path)
+        .map(PathBuf::from)
+        .unwrap_or(default_root);
 
     tauri::Builder::default()
         .manage(AppState {
