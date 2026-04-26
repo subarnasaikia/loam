@@ -22,6 +22,21 @@ fn resolve_root_from_settings(user_override: Option<&str>) -> LoamResult<PathBuf
     ))
 }
 
+fn validate_loam_path(p: &str) -> LoamResult<PathBuf> {
+    let path = PathBuf::from(p);
+    if !path.is_absolute() {
+        return Err(error::LoamError::Path("loam_path must be an absolute path".into()));
+    }
+    // Reject paths that would escape user-space on macOS/Linux.
+    let blocked = ["/etc", "/System", "/usr", "/bin", "/sbin", "/lib", "/proc"];
+    for prefix in &blocked {
+        if path.starts_with(prefix) {
+            return Err(error::LoamError::Path(format!("loam_path may not be under {prefix}")));
+        }
+    }
+    Ok(path)
+}
+
 #[tauri::command]
 fn ensure_loam_dir(state: State<AppState>) -> LoamResult<String> {
     let root = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?.clone();
@@ -64,7 +79,7 @@ fn save_settings(
     let mut root_guard = state.root.lock().map_err(|_| error::LoamError::Path("state lock poisoned".into()))?;
     settings::save_settings(&root_guard, &new_settings)?;
     if let Some(new_path) = new_settings.loam_path.as_deref() {
-        *root_guard = PathBuf::from(new_path);
+        *root_guard = validate_loam_path(new_path)?;
     } else {
         *root_guard = resolve_root_from_settings(None)?;
     }
@@ -79,7 +94,7 @@ pub fn run() {
     let initial_root = settings::load_settings(&default_root)
         .ok()
         .and_then(|s| s.loam_path)
-        .map(PathBuf::from)
+        .and_then(|p| validate_loam_path(&p).ok())
         .unwrap_or(default_root);
 
     tauri::Builder::default()

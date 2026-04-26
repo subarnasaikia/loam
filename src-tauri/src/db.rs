@@ -56,13 +56,12 @@ pub fn open(root: &Path) -> LoamResult<Connection> {
 }
 
 pub fn migrate(conn: &Connection) -> LoamResult<()> {
-    conn.execute_batch(SCHEMA_V1)
+    let batch = format!(
+        "BEGIN IMMEDIATE;\n{}\nINSERT OR REPLACE INTO _meta (key, value) VALUES ('schema_version', '1');\nCOMMIT;",
+        SCHEMA_V1
+    );
+    conn.execute_batch(&batch)
         .map_err(|e| LoamError::Sqlite(e.to_string()))?;
-    conn.execute(
-        "INSERT OR REPLACE INTO _meta (key, value) VALUES ('schema_version', '1')",
-        params![],
-    )
-    .map_err(|e| LoamError::Sqlite(e.to_string()))?;
     Ok(())
 }
 

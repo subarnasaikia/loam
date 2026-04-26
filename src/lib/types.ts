@@ -29,7 +29,7 @@ export const DEFAULT_SETTINGS: Settings = {
   onboarding_complete: false,
 };
 
-export const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+export const ISO_DATE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 export function isIsoDate(s: string): boolean {
   return ISO_DATE.test(s);
 }
