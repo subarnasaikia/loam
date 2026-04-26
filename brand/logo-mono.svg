@@ -1,14 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 160" width="280" height="160" role="img" aria-label="Loam (monochrome)">
-  <title>Loam (monochrome)</title>
-  <g>
-    <path d="M 46 48 Q 54 18 96 12 Q 160 8 188 18 Q 162 42 120 42 Q 78 40 46 48 Z"
-          fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M 46 48 Q 100 22 188 18"
-          stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.5"/>
-    <rect x="40" y="48" width="12" height="92" fill="currentColor" rx="1"/>
-    <rect x="32" y="138" width="20" height="6" fill="currentColor" rx="1"/>
-  </g>
-  <text x="62" y="142"
-        font-family="Fraunces, Georgia, 'Iowan Old Style', 'Palatino Linotype', serif"
-        font-size="96" font-weight="400" fill="currentColor" letter-spacing="-4">oam</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="160" aria-label="Loam (monochrome)" role="img" viewBox="0 0 280 160"><title>Loam (monochrome)</title><g><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M 46 48 Q 54 18 96 12 Q 160 8 188 18 Q 162 42 120 42 Q 78 40 46 48 Z"/><path fill="none" stroke="currentColor" stroke-width=".8" d="M 46 48 Q 100 22 188 18" opacity=".5"/><rect width="12" height="92" x="40" y="48" fill="currentColor" rx="1"/><rect width="20" height="6" x="32" y="138" fill="currentColor" rx="1"/></g><text x="62" y="142" fill="currentColor" font-family="Fraunces, Georgia, 'Iowan Old Style', 'Palatino Linotype', serif" font-size="96" font-weight="400" letter-spacing="-4">oam</text></svg>
