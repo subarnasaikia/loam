@@ -17,7 +17,7 @@ Every entry plants a landmark in a private 3D world you can walk through. Six bi
 
 ## Status
 
-**Pre-alpha.** Design spec approved; implementation planning begins next.
+**Alpha — M1 complete.** The local storage foundation is wired and running. A proof-of-life window opens, creates `~/Documents/Loam/`, reads/writes markdown entries, and persists settings across restarts. No 3D world yet — that's M2+.
 
 Full design: [`docs/superpowers/specs/2026-04-17-loam-design.md`](docs/superpowers/specs/2026-04-17-loam-design.md).
 
@@ -34,8 +34,8 @@ Full design: [`docs/superpowers/specs/2026-04-17-loam-design.md`](docs/superpowe
 
 - [x] Design spec
 - [x] Brand marks
-- [ ] Implementation plan
-- [ ] M1 — Tauri shell + local storage
+- [x] Implementation plan
+- [x] M1 — Tauri shell + local storage
 - [ ] M2 — Minimum viable journal page
 - [ ] M3 — Theme classifier + biomes
 - [ ] M4–M5 — 3D world + camera flow
@@ -47,9 +47,25 @@ Full design: [`docs/superpowers/specs/2026-04-17-loam-design.md`](docs/superpowe
 
 See the design spec §11 for scope details.
 
-## Tech (planned)
+## Development
 
-Tauri 2 · React + TypeScript + Vite · React Three Fiber · TipTap · SQLite · Tailwind.
+```bash
+pnpm install          # install dependencies
+pnpm tauri dev        # run the desktop app (hot-reload)
+pnpm test             # vitest unit tests
+pnpm typecheck        # tsc --noEmit
+cd src-tauri && cargo test   # Rust unit tests
+```
+
+First `cargo build` compiles `rusqlite` (bundled SQLite) — takes ~1 min. Subsequent builds are fast.
+
+On first launch, Loam creates `~/Documents/Loam/` with `entries/`, `assets/`, `config.json`, and `index.sqlite`. All data stays there; nothing is written anywhere else.
+
+## Tech
+
+**Shipping:** Tauri 2 · Rust · React 19 · TypeScript · Vite · SQLite (rusqlite bundled)
+
+**Planned:** React Three Fiber · TipTap · Tailwind
 
 ## Contributing
 
