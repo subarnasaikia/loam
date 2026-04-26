@@ -25,6 +25,8 @@ CREATE VIRTUAL TABLE IF NOT EXISTS entries_fts USING fts5(date UNINDEXED, body);
 CREATE INDEX IF NOT EXISTS idx_biome ON entries(biome);
 CREATE INDEX IF NOT EXISTS idx_themes ON entries(primary_theme);
 
+-- World features the user has encountered (biome unlocks, landmark discovery).
+-- No badges, no streaks — purely tracks what the world has revealed.
 CREATE TABLE IF NOT EXISTS unlocks (
   id TEXT PRIMARY KEY,
   unlocked_at INTEGER,
@@ -54,13 +56,12 @@ pub fn open(root: &Path) -> LoamResult<Connection> {
 }
 
 pub fn migrate(conn: &Connection) -> LoamResult<()> {
-    conn.execute_batch(SCHEMA_V1)
+    let batch = format!(
+        "BEGIN IMMEDIATE;\n{}\nINSERT OR REPLACE INTO _meta (key, value) VALUES ('schema_version', '1');\nCOMMIT;",
+        SCHEMA_V1
+    );
+    conn.execute_batch(&batch)
         .map_err(|e| LoamError::Sqlite(e.to_string()))?;
-    conn.execute(
-        "INSERT OR REPLACE INTO _meta (key, value) VALUES ('schema_version', '1')",
-        params![],
-    )
-    .map_err(|e| LoamError::Sqlite(e.to_string()))?;
     Ok(())
 }
 
@@ -142,6 +143,6 @@ mod tests {
         let (_tmp, root) = setup();
         let conn = open(&root).unwrap();
         let result = schema_version(&conn);
-        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), LoamError::Sqlite(_)));
     }
 }

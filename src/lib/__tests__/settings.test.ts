@@ -27,9 +27,10 @@ describe("settings module", () => {
     expect(mockInvoke).toHaveBeenCalledWith("save_settings", { newSettings: next });
   });
 
-  it("saveAppSettings merges partial updates with defaults", async () => {
+  it("saveAppSettings passes full settings object to command", async () => {
     mockInvoke.mockResolvedValueOnce(undefined);
-    await saveAppSettings({ aesthetic: "nocturnal" });
+    const full = { ...DEFAULT_SETTINGS, aesthetic: "nocturnal" as const };
+    await saveAppSettings(full);
     const call = mockInvoke.mock.calls[0];
     expect(call[0]).toBe("save_settings");
     expect(call[1].newSettings.aesthetic).toBe("nocturnal");

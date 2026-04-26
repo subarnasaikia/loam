@@ -15,11 +15,16 @@ fn is_iso_date(s: &str) -> bool {
         return false;
     }
     let b = s.as_bytes();
-    b[4] == b'-'
-        && b[7] == b'-'
+    if !(b[4] == b'-' && b[7] == b'-'
         && b[0..4].iter().all(|c| c.is_ascii_digit())
         && b[5..7].iter().all(|c| c.is_ascii_digit())
-        && b[8..10].iter().all(|c| c.is_ascii_digit())
+        && b[8..10].iter().all(|c| c.is_ascii_digit()))
+    {
+        return false;
+    }
+    let month: u8 = (b[5] - b'0') * 10 + (b[6] - b'0');
+    let day: u8 = (b[8] - b'0') * 10 + (b[9] - b'0');
+    month >= 1 && month <= 12 && day >= 1 && day <= 31
 }
 
 pub fn write_entry(root: &Path, date: &str, body: &str) -> LoamResult<PathBuf> {
@@ -27,6 +32,8 @@ pub fn write_entry(root: &Path, date: &str, body: &str) -> LoamResult<PathBuf> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent)?;
     }
+    // Concurrent writes for the same date race on the shared .tmp file. Safe in
+    // M1 (single-writer UI); serialize at the command level when the editor arrives.
     let tmp = path.with_extension("md.tmp");
     fs::write(&tmp, body)?;
     fs::rename(&tmp, &path)?;
